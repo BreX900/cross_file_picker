@@ -1,8 +1,9 @@
 name: cross_file_picker
 description: A package that allows you to use the native file explorer to pick single or multiple files/image/video, with extensions filtering support.
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/BreX900/cross_file_picker
+
+# flutter pub publish --dry-run
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
