@@ -5,6 +5,9 @@ import 'package:cross_file_picker/src/x_file_stream.dart';
 import 'package:file_picker/file_picker.dart' as fp;
 import 'package:image_picker/image_picker.dart' as ip;
 
+export 'package:file_picker/file_picker.dart' hide FilePicker, FilePickerResult, PlatformFile;
+export 'package:image_picker/image_picker.dart' hide ImagePicker;
+
 class CrossFilePicker {
   final _imagePicker = ip.ImagePicker();
   final _filePicker = fp.FilePicker.platform;
