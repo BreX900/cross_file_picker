@@ -1,8 +1,8 @@
 library cross_file_picker;
 
 import 'package:cross_file/cross_file.dart';
-import 'package:cross_file_picker/src/x_file_stream.dart';
 import 'package:file_picker/file_picker.dart' as fp;
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart' as ip;
 
 export 'package:file_picker/file_picker.dart' hide FilePicker, FilePickerResult, PlatformFile;
@@ -48,8 +48,6 @@ class CrossFilePicker {
     List<String>? allowedExtensions,
     Function(fp.FilePickerStatus)? onFileLoading,
     bool allowCompression = false,
-    bool withData = false,
-    bool withReadStream = false,
   }) async {
     final files = await _filePicker.pickFiles(
       allowMultiple: allowMultiple,
@@ -57,19 +55,25 @@ class CrossFilePicker {
       allowedExtensions: allowedExtensions,
       onFileLoading: onFileLoading,
       allowCompression: allowCompression,
-      withData: withData,
-      withReadStream: withReadStream,
+      withData: kIsWeb,
+      withReadStream: false,
     );
     if (files == null) return const <XFile>[];
     return files.files.map((file) {
-      if (file.bytes != null) {
-        return XFile.fromData(file.bytes!, name: file.name, length: file.size, path: file.path);
-      } else if (file.path != null) {
-        return XFile(file.path!, name: file.name, length: file.size, bytes: file.bytes);
-      } else if (file.readStream != null) {
-        return XFileStream(file.readStream!, path: file.path, name: file.name, length: file.size);
+      if (kIsWeb) {
+        return XFile.fromData(
+          file.bytes!,
+          path: file.path,
+          name: file.name,
+          length: file.size,
+        );
       } else {
-        throw throw UnimplementedError('.path has not been implemented.');
+        return XFile(
+          file.path!,
+          bytes: file.bytes,
+          name: file.name,
+          length: file.size,
+        );
       }
     }).toList();
   }
@@ -81,27 +85,35 @@ class CrossFilePicker {
     double? maxHeight,
     int? imageQuality,
   }) async {
-    final file = await _imagePicker.getImage(
+    return await _imagePicker.pickImage(
       source: source,
       preferredCameraDevice: preferredCameraDevice,
       maxWidth: maxWidth,
       maxHeight: maxHeight,
     );
-    if (file == null) return null;
-    return XFile(file.path);
   }
 
-  Future<XFile?> pickVideoImage({
+  Future<List<XFile>> pickMultiImage({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+  }) async {
+    final list = await _imagePicker.pickMultiImage(
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+    );
+    return list ?? const [];
+  }
+
+  Future<XFile?> pickVideo({
     required ip.ImageSource source,
     ip.CameraDevice preferredCameraDevice = ip.CameraDevice.rear,
     Duration? maxDuration,
   }) async {
-    final file = await _imagePicker.getVideo(
+    return await _imagePicker.pickVideo(
       source: source,
       preferredCameraDevice: preferredCameraDevice,
       maxDuration: maxDuration,
     );
-    if (file == null) return null;
-    return XFile(file.path);
   }
 }
