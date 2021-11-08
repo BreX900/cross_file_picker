@@ -74,4 +74,4 @@ build/
 !**/ios/**/default.perspectivev3
 
 # Custom
-./pubspec.lock
+pubspec.lock
