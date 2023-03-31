@@ -1,3 +1,9 @@
+## [1.0.0]
+- feat: implemented all file_picker package methods
+
+**BREAKING CHANGES**:
+- refactor: removed image_picker package methods
+
 ## [0.1.0]
 - Update dependencies (file_picker ^5.x.x)
 - Update flutter to ^3.x.x and dart ^2.17.x
