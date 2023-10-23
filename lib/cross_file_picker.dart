@@ -148,7 +148,7 @@ class CrossFilePicker {
         } else {
           return XFile.fromData(
             file.bytes!,
-            path: file.path,
+            path: null,
             name: file.name,
             length: file.size,
           );
